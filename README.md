@@ -11,5 +11,5 @@
 
 ### Instalar pacote:
 ```
-$: composer require shieldforce/google-search
+$: composer require shieldforce/google-search:dev-main
 ```
