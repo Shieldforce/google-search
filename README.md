@@ -4,3 +4,8 @@
 - [x] PHP >= 7.0
 - [x] Composer >= 2
 - [x] Autoload do composer Ativado!
+
+### Instalar pacote:
+```
+$: composer require shieldforce/google-search
+```
