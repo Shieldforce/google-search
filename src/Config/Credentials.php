@@ -6,29 +6,49 @@ namespace Shieldforce\GoogleSearch\Config;
 
 class Credentials
 {
-    private $url;
-    private $apiKey;
-    private $id;
+    private static $instance;
 
-    public function __construct(string $apiKey, string $id, string $url="https://www.googleapis.com.br/customsearch/v1")
+    private static $apiKey = null;
+    private static $id = null;
+    private static $url = "https://www.googleapis.com.br/customsearch/v1";
+
+    private function __construct(){}
+
+    public static function setCredentials(
+        string $apiKey,
+        string $id,
+        string $url=null
+    )
     {
-        $this->url = $url;
-        $this->apiKey = $apiKey;
-        $this->id = $id;
+        self::$apiKey = $apiKey;
+        self::$id = $id;
+        self::$url = $url ?? self::$url;
     }
 
-    public function getUrl(): string
+    private function __clone(){}
+    public function __wakeup(){}
+
+    public static function getInstance() : Credentials
     {
-        return $this->url;
+        if(!isset(self::$instance)) {
+            self::$instance = new static();
+        }
+
+        return self::$instance;
     }
 
-    public function getApiKey(): string
+    public static function getUrl(): string
     {
-        return $this->apiKey;
+        return self::$url;
     }
 
-    public function getId(): string
+    public static  function getApiKey(): string
     {
-        return $this->id;
+        return self::$apiKey;
+    }
+
+    public static  function getId(): string
+    {
+        return self::$id;
     }
 }

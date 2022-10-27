@@ -407,8 +407,8 @@
         },
         {
             "name": "vlucas/phpdotenv",
-            "version": "dev-master",
-            "version_normalized": "dev-master",
+            "version": "v5.5.0",
+            "version_normalized": "5.5.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vlucas/phpdotenv.git",
@@ -438,7 +438,6 @@
                 "ext-filter": "Required to use the boolean validator."
             },
             "time": "2022-10-16T01:01:54+00:00",
-            "default-branch": true,
             "type": "library",
             "extra": {
                 "bamarni-bin": {
