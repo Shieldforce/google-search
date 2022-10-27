@@ -1,6 +1,6 @@
 <?php
 
-namespace App\GoogleAPIs;
+namespace Shieldforce\GoogleSearch\TypeSearch;
 
 use Shieldforce\GoogleSearch\RequestCurl\CURL;
 use Shieldforce\GoogleSearch\Config\Credentials;
