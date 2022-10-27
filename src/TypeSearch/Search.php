@@ -50,7 +50,7 @@ class Search
         $per_page = ($per_page > 10) ? 10 : $per_page;
 
         $params = [
-            'q' => $terms,
+            'q' => ''.$terms.'',
             'start' => (($page - 1) * $per_page) + 1,
             'num' => $per_page
         ];
