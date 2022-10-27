@@ -1,0 +1,21 @@
+{
+    "name": "shieldforce/google-search",
+    "description": "Pacote para consumir API google-search",
+    "type" : "library",
+    "license": "GPL-3.0-or-later",
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Shieldforce\\GoogleSearch\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Alexandre Ferreira",
+            "email": "shieldforce2@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.0"
+    }
+}
