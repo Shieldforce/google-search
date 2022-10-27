@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 class Credentials
 {
-    private $url="https://www.googleapis.com.br/customsearch/v1";
+    private $url;
     private $apiKey;
     private $id;
 
