@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace Shieldforce\GoogleSearch\Config;
+
 class Credentials
 {
     private $url;
