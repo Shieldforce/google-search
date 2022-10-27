@@ -8,46 +8,28 @@ class Search
 {
     private static function request($params)
     {
-        $credentials = Credentials::getInstance();
 
-        $params = array_merge($params, [
-            'key' => $credentials->getApiKey(),
-            'cx'  => $credentials->getId()
-        ]);
+        $params = self::addParams($params);
 
-        $context = stream_context_create([
-            'http' => [ 'ignore_errors' => true ],
-            'ssl'  => [ 'verify_peer' => false, 'verify_peer_name' => false, ]
-        ]);
-
-        if (function_exists('curl_version')) {
-            $response = self::getSslPage(
+        if (!function_exists('curl_version')) {
+            return json_decode(self::getNotSslPage(
                 'https://www.googleapis.com/customsearch/v1?' . http_build_query($params)
-            );
-        } else {
-            $response = file_get_contents(
-                'https://www.googleapis.com/customsearch/v1?' . http_build_query($params),
-                false,
-                $context
-            );
+            ));
         }
 
-        return json_decode($response);
+        return json_decode(self::getSslPage(
+            'https://www.googleapis.com/customsearch/v1?' . http_build_query($params)
+        ));
     }
 
     public static function search($terms, $page=1, $per_page=10, $extra=[])
     {
 
-        $per_page = ($per_page > 10) ? 10 : $per_page;
+        $params = self::addTextSearchParams($terms);
 
-        $params = [
-            'q'      => ''.$terms.'',
-            'start'  => (($page - 1) * $per_page) + 1,
-            'num'    => $per_page
-        ];
-        if (sizeof($extra)) {
-            $params = array_merge($params, $extra);
-        }
+        $params = self::addPaginateParams($page, $per_page, $params);
+
+        $params = self::addExtraParams($extra, $params);
 
         $response = self::request($params);
 
@@ -55,9 +37,9 @@ class Search
             throw new \Exception($response->error->message);
         }
 
-        $request_info = $response->queries->request[0];
+        $request_info = $response->queries->request[0] ?? null;
 
-        $results = new \stdClass();
+        $results               = new \stdClass();
         $results->page         = $page;
         $results->perPage      = $per_page;
         $results->start        = $request_info->startIndex;
@@ -81,7 +63,8 @@ class Search
         return $results;
     }
 
-    public static function getSslPage($url) {
+    private static function getSslPage($url)
+    {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
         curl_setopt($ch, CURLOPT_HEADER, false);
@@ -92,5 +75,49 @@ class Search
         $result = curl_exec($ch);
         curl_close($ch);
         return $result;
+    }
+
+    private static function getNotSslPage($url)
+    {
+        $context = stream_context_create([
+            'http' => [ 'ignore_errors' => true ],
+            'ssl'  => [ 'verify_peer' => false, 'verify_peer_name' => false, ]
+        ]);
+
+        return file_get_contents(
+            $url,
+            false,
+            $context
+        );
+    }
+
+    private static function addParams($params)
+    {
+        $credentials = Credentials::getInstance();
+        return array_merge($params, [
+            'key' => $credentials->getApiKey(),
+            'cx'  => $credentials->getId()
+        ]);
+    }
+
+    private static function addPaginateParams($page, $per_page, $params=[])
+    {
+        $per_page = ($per_page > 10) ? 10 : $per_page;
+        return array_merge($params, [
+            'start'  => (($page - 1) * $per_page) + 1,
+            'num'    => $per_page
+        ]);
+    }
+
+    private static function addTextSearchParams($textSearch, $params=[])
+    {
+        return array_merge($params, [
+            'q'  => $textSearch,
+        ]);
+    }
+
+    private static function addExtraParams($extra, $params=[])
+    {
+        return array_merge($params, $extra);
     }
 }
