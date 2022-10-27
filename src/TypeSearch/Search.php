@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Shieldforce\GoogleSearch\TypeSearch;
 
 use Shieldforce\GoogleSearch\Config\Credentials;
