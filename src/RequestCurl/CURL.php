@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories\RequestCurl;
+namespace Shieldforce\GoogleSearch\RequestCurl;
 
 class CURL
 {

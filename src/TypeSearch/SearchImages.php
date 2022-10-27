@@ -2,7 +2,7 @@
 
 namespace App\GoogleAPIs;
 
-use App\Repositories\RequestCurl\CURL;
+use Shieldforce\GoogleSearch\RequestCurl\CURL;
 use Shieldforce\GoogleSearch\Config\Credentials;
 
 class SearchImages
