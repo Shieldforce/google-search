@@ -2,5 +2,5 @@
 
 ### Requisitos:
 - [x] PHP >= 7.0
-- Composer >= 2
-- Autoload do composer Ativado!
+- [x] Composer >= 2
+- [x] Autoload do composer Ativado!
