@@ -6,7 +6,7 @@ use Shieldforce\GoogleSearch\Config\Credentials;
 
 class Search
 {
-    private static function request($params)
+    private static function request($params) : array
     {
 
         $params = self::addParams($params);
@@ -22,7 +22,7 @@ class Search
         ));
     }
 
-    public static function run($terms, $page=1, $per_page=10, $extra=[])
+    public static function run(string $terms, int $page=1, int $per_page=10, array $extra=[]) : \Stdclass
     {
 
         $params = self::addTextSearchParams($terms);
