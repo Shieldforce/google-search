@@ -12,13 +12,13 @@ class Search
 
         $params = array_merge($params, [
             'key' => $credentials->getApiKey(),
-            'cx' => $credentials->getId()
+            'cx'  => $credentials->getId()
         ]);
 
-        $context = stream_context_create(['http' => ['ignore_errors' => true], 'ssl' => [
-            'verify_peer' => false,
-            'verify_peer_name' => false,
-        ]]);
+        $context = stream_context_create([
+            'http' => [ 'ignore_errors' => true ],
+            'ssl'  => [ 'verify_peer' => false, 'verify_peer_name' => false, ]
+        ]);
 
         if (function_exists('curl_version')) {
             $response = self::getSslPage(
