@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Shieldforce\GoogleSearch\TypeSearch;
 
 use Shieldforce\GoogleSearch\Config\Credentials;
@@ -23,9 +21,17 @@ class Search
         ]]);
 
         if (function_exists('curl_version')) {
-            $response = self::getSslPage($credentials->getUrl() . '?' . http_build_query($params));
+            $response = self::getSslPage(
+                'https://www.googleapis.com/customsearch/v1?' .
+                http_build_query($params)
+            );
         } else {
-            $response = file_get_contents($credentials->getUrl() . '?' . http_build_query($params), false, $context);
+            $response = file_get_contents(
+                'https://www.googleapis.com/customsearch/v1?' .
+                http_build_query($params),
+                false,
+                $context
+            );
         }
 
         return json_decode($response);
@@ -37,11 +43,10 @@ class Search
         $per_page = ($per_page > 10) ? 10 : $per_page;
 
         $params = [
-            'q' => ''.$terms.'',
-            'start' => (($page - 1) * $per_page) + 1,
-            'num' => $per_page
+            'q'      => ''.$terms.'',
+            'start'  => (($page - 1) * $per_page) + 1,
+            'num'    => $per_page
         ];
-
         if (sizeof($extra)) {
             $params = array_merge($params, $extra);
         }
@@ -55,22 +60,22 @@ class Search
         $request_info = $response->queries->request[0];
 
         $results = new \stdClass();
-        $results->page = $page;
-        $results->perPage = $per_page;
-        $results->start = $request_info->startIndex;
-        $results->end = ($request_info->startIndex + $request_info->count) - 1;
+        $results->page         = $page;
+        $results->perPage      = $per_page;
+        $results->start        = $request_info->startIndex;
+        $results->end          = ($request_info->startIndex + $request_info->count) - 1;
         $results->totalResults = $request_info->totalResults;
-        $results->results = [];
+        $results->results      = [];
 
         if (isset($response->items)) {
             foreach ($response->items as $result) {
                 $results->results[] = (object) [
-                    'title' => $result->title,
-                    'snippet' => $result->snippet,
+                    'title'       => $result->title,
+                    'snippet'     => $result->snippet,
                     'htmlSnippet' => $result->htmlSnippet,
-                    'link' => $result->link,
-                    'image' => isset($result->pagemap->cse_image) ? $result->pagemap->cse_image[0]->src : '',
-                    'thumbnail' => isset($result->pagemap->cse_thumbnail) ? $result->pagemap->cse_thumbnail[0]->src : '',
+                    'link'        => $result->link,
+                    'image'       => isset($result->pagemap->cse_image) ? $result->pagemap->cse_image[0]->src : '',
+                    'thumbnail'   => isset($result->pagemap->cse_thumbnail) ? $result->pagemap->cse_thumbnail[0]->src : '',
                 ];
             }
         }

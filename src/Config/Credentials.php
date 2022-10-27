@@ -10,19 +10,16 @@ class Credentials
 
     private static $apiKey = null;
     private static $id = null;
-    private static $url = 'https://www.googleapis.com/customsearch/v1';
 
     private function __construct(){}
 
     public static function setCredentials(
         string $apiKey,
-        string $id,
-        string $url=null
+        string $id
     )
     {
         self::$apiKey = $apiKey;
         self::$id = $id;
-        self::$url = $url ?? self::$url;
     }
 
     private function __clone(){}
@@ -35,11 +32,6 @@ class Credentials
         }
 
         return self::$instance;
-    }
-
-    public static function getUrl(): string
-    {
-        return self::$url;
     }
 
     public static  function getApiKey(): string
