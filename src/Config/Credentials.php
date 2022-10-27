@@ -10,11 +10,11 @@ class Credentials
     private $apiKey;
     private $id;
 
-    public function __construct()
+    public function __construct(string $apiKey, string $id, string $url="https://www.googleapis.com.br/customsearch/v1")
     {
-        $this->url = getenv("GOOGLE_URL_SEARCH");
-        $this->apiKey = getenv("GOOGLE_APIKEY_SEARCH");
-        $this->id = getenv("GOOGLE_ID_SEARCH");
+        $this->url = $url;
+        $this->apiKey = $apiKey;
+        $this->id = $id;
     }
 
     public function getUrl(): string
