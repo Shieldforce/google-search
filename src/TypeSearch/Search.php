@@ -2,49 +2,34 @@
 
 namespace Shieldforce\GoogleSearch\TypeSearch;
 
+use Shieldforce\GoogleSearch\Config\Credentials;
+
 class Search
 {
-
-    protected $search_engine_id;
-    protected $api_key;
-    public function __construct($search_engine_id, $api_key)
+    private static function request($params)
     {
-        $this->search_engine_id = $search_engine_id;
-        $this->api_key = $api_key;
-    }
+        $credentials = Credentials::getInstance();
 
-    private function request($params)
-    {
-        $params = array_merge(
-            $params,
-            [
-                'key' => $this->api_key,
-                'cx' => $this->search_engine_id
-            ]
-        );
-
-        // disable peer verification
-        $context = stream_context_create([
-            'http' => [
-                'ignore_errors' => true
-            ],
-            'ssl' => [
-                'verify_peer' => false,
-                'verify_peer_name' => false,
-            ]
+        $params = array_merge($params, [
+            'key' => $credentials->getApiKey(),
+            'cx' => $credentials->getId()
         ]);
 
-        // use cURL if avaible, otherwise fallback to file_get_contents
+        $context = stream_context_create(['http' => ['ignore_errors' => true], 'ssl' => [
+            'verify_peer' => false,
+            'verify_peer_name' => false,
+        ]]);
+
         if (function_exists('curl_version')) {
-            $response = $this->getSslPage('https://www.googleapis.com/customsearch/v1?' . http_build_query($params));
+            $response = self::getSslPage($credentials->getUrl() . '?' . http_build_query($params));
         } else {
-            $response = file_get_contents('https://www.googleapis.com/customsearch/v1?' . http_build_query($params), false, $context);
+            $response = file_get_contents($credentials->getUrl() . '?' . http_build_query($params), false, $context);
         }
 
         return json_decode($response);
     }
 
-    public function search($terms, $page=1, $per_page=10, $extra=[])
+    public static function search($terms, $page=1, $per_page=10, $extra=[])
     {
 
         $per_page = ($per_page > 10) ? 10 : $per_page;
@@ -54,11 +39,12 @@ class Search
             'start' => (($page - 1) * $per_page) + 1,
             'num' => $per_page
         ];
+
         if (sizeof($extra)) {
             $params = array_merge($params, $extra);
         }
 
-        $response = $this->request($params);
+        $response = self::request($params);
 
         if (isset($response->error)) {
             throw new \Exception($response->error->message);
@@ -90,7 +76,7 @@ class Search
         return $results;
     }
 
-    public function getSslPage($url) {
+    public static function getSslPage($url) {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
         curl_setopt($ch, CURLOPT_HEADER, false);

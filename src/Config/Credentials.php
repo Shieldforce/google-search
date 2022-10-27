@@ -10,7 +10,7 @@ class Credentials
 
     private static $apiKey = null;
     private static $id = null;
-    private static $url = "https://www.googleapis.com.br/customsearch/v1";
+    private static $url = 'https://www.googleapis.com/customsearch/v1';
 
     private function __construct(){}
 
