@@ -22,7 +22,7 @@ class Search
         ));
     }
 
-    public static function run(string $terms, int $page=1, int $per_page=10, array $extra=[]) : \Stdclass
+    public static function run(string $terms, int $page=1, int $per_page=10, array $extra=[])
     {
 
         $params = self::addTextSearchParams($terms);

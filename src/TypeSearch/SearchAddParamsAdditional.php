@@ -6,7 +6,7 @@ use Shieldforce\GoogleSearch\Config\Credentials;
 
 class SearchAddParamsAdditional
 {
-    public static function run(string $termMain, array $termsAdditional = [])
+    public static function run(string $termMain, array $termsAdditional)
     {
         $listSearch = [];
         foreach ($termsAdditional as $termAdditional) {
