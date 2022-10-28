@@ -22,7 +22,7 @@ class Search
         ));
     }
 
-    public static function run(string $terms, int $page=1, int $per_page=10, array $extra=[]) : \Stdclass
+    public static function run(string $terms, int $page=1, int $per_page=10, array $extra=[]) : array
     {
 
         $params = self::addTextSearchParams($terms);
@@ -38,18 +38,17 @@ class Search
         }
 
         $request_info = $response->queries->request[0] ?? null;
-
-        $results               = new \stdClass();
-        $results->page         = $page;
-        $results->perPage      = $per_page;
-        $results->start        = $request_info->startIndex;
-        $results->end          = ($request_info->startIndex + $request_info->count) - 1;
-        $results->totalResults = $request_info->totalResults;
-        $results->results      = [];
+        $results                 = [];
+        $results["page"]         = $page;
+        $results["perPage"]      = $per_page;
+        $results["start"]        = $request_info->startIndex;
+        $results["end"]          = ($request_info->startIndex + $request_info->count) - 1;
+        $results["totalResults"] = $request_info->totalResults;
+        $results["results"]      = [];
 
         if (isset($response->items)) {
             foreach ($response->items as $result) {
-                $results->results[] = (object) [
+                $results["results"][] = [
                     'title'       => $result->title,
                     'snippet'     => $result->snippet,
                     'htmlSnippet' => $result->htmlSnippet,
@@ -59,7 +58,6 @@ class Search
                 ];
             }
         }
-
         return $results;
     }
 
